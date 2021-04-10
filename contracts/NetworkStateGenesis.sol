@@ -7,26 +7,16 @@ import "../node_modules/@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
 contract NetworkStateGenesis is ERC721 {
     string public GENESIS = "Will be populated";
-
+    uint256 public currentPrice = 7 * (10 ** 16); // Starting price is 0.07 ETH
+   	uint256 public currentSerialNumber;
+    uint256 public cutoffTimestamp;  // Initially all have the same price. Later on (1625443200 ---> 2021-07-05T00:00:00.000Z) the 0.1% increase kicks in.
   	uint256 public multiplier = 1001; 
   	uint256 public divisor = 1000; // Doing math in ETH. Multiply by 1001. Divide by 1000. Effectively 0.1% increase with each purchase.
-  	uint256 public serialNumber;
-  	uint256 public currentPrice = 10 ** 17; // Starting price is 0.1 ETH
-
-  	event Purchase(address indexed addr, uint256 indexed serialNumber, uint256 price, bool BTC); // Final parameter `BTC` to indicate if purchase with BTC
-    event Claim(address indexed addr); // Free claim as opposed to the actual purchase
-
-    mapping(address => uint) public registrationTime;
-
+  	event Purchase(address indexed addr, uint256 indexed currentSerialNumber, uint256 price, bool BTC); // Final parameter `BTC` to indicate if purchase with BTC
     address public WBTCaddress; // On mainnet: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599
-    IERC20 public WBTC;
-
-    // Until `cutoffTimestamp` all have the same price. Later on, the 0.1% increase kicks in.
-    uint256 public cutoffTimestamp; // 1625443200 ---> 2021-07-05T00:00:00.000Z
-
+    IERC20 private WBTC;
     address payable public multisig; // Ensure that there is enough m-of-n signatories and you are one of them to be extra sure (don't trust, verify)
 
-    // "Network State Genesis", "NSG", 0x85A363699C6864248a6FfCA66e4a1A5cCf9f5567
     constructor(string memory name, string memory symbol, address payable _multisig, address _WBTCaddress, uint _cutoffTimestamp) ERC721(name, symbol) {
         multisig = _multisig;
         cutoffTimestamp = _cutoffTimestamp;
@@ -37,20 +27,9 @@ contract NetworkStateGenesis is ERC721 {
     function _baseURI() internal pure override returns (string memory) {
         return "https://genesis.re/passports/";
     }
-
-    //////////////////////////////// 
+ 
     receive() external payable { // Fallback function
         purchase();
-    }
-
-    // ALWAYS FREE (only a gas fee) and available to everyone
-    // The `registrationTime` will be used to calculate the reward in the future
-    // NOTE: fetch signature (off-chain) and store on IPFS to reduce friction
-    // NOTE: cross-check with proof of humanity to prevent sybil attack
-    function freeClaim() public {
-        require(registrationTime[msg.sender] == 0, "Address already registered");
-        registrationTime[msg.sender] = block.timestamp;
-        emit Claim(msg.sender);
     }
 
     function purchase() payable public {
@@ -59,11 +38,16 @@ contract NetworkStateGenesis is ERC721 {
         if (refund > 0) {
             payable(msg.sender).transfer(refund);
         }       
-        multisig.transfer(currentPrice);
+        // multisig.transfer(currentPrice); 
 
-        _mint(msg.sender, serialNumber);
-        emit Purchase(msg.sender, serialNumber, currentPrice, false);
-        serialNumber++;
+        // Sending to Gnosis Safe takes more than 21k gas limit on `transfer`
+        // Need to use something else, see: https://solidity-by-example.org/sending-ether/
+        (bool sent, bytes memory data) = multisig.call{value: currentPrice}("");
+        require(sent, "Failed to send Ether");
+
+        _mint(msg.sender, currentSerialNumber);
+        emit Purchase(msg.sender, currentSerialNumber, currentPrice, false);
+        currentSerialNumber++;
 
         if (block.timestamp > cutoffTimestamp) {
             currentPrice = currentPrice * multiplier / divisor; // * 1001 / 1000 === increase by 0.1% (no longer SafeMath, compiler by default)
@@ -73,20 +57,30 @@ contract NetworkStateGenesis is ERC721 {
     // This is inspired by Hackers Congress Paralelní Polis: final ticket available for 1 BTC
     // Network State Genesis offers *UNLIMITED* number of NFTs for 1 BTC
     // How is that even possible?
-    // As we establish multiplanetary civilisation, some of the accrued money will be put back into the circulation (recycling)
+    // As we establish multiplanetary civilisation, some of the accrued money will be put back into the circulation (Bitcoin recycling)
     function purchaseWithWBTC() public {
         WBTC.transferFrom(msg.sender, multisig, 10 ** 18);
-        _mint(msg.sender, serialNumber);
-        Purchase(msg.sender, serialNumber, 0, true);
-        serialNumber++;
+        _mint(msg.sender, currentSerialNumber);
+        Purchase(msg.sender, currentSerialNumber, 0, true);
+        currentSerialNumber++;
     }
 
-    //////////////////////////////// MESSAGES
+    // ALWAYS FREE (only the gas fee) and available to everyone. Free claim as opposed to the actual purchase.
+    // BUT: if someone can afford to send a transaction on ETH, they surely can afford 0.07 ETH? (not 100% sure if `free claim` is really needed)
+    // TODO: cross-check with proof of humanity (sybil attack) and store signature off-chain
+    // We do not know yet, probably there will be some airdrop to all the citizens? TBD. TBC.
+    event FreeClaim(address indexed addr);
+    mapping(address => uint) public registrationTime;
+    
+    function freeClaim() public {
+        require(registrationTime[msg.sender] == 0, "Address already registered");
+        registrationTime[msg.sender] = block.timestamp;
+        emit FreeClaim(msg.sender);
+    }
+
     // On-chain interface for communication
     // Naturally, there will be off-chain solutions as well
-
     event MessagePosted(string IPFShash);
-
     mapping(address => string[]) public messages;
 
     function publishMessage(string memory IPFShash) public {
