@@ -1,14 +1,11 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.6.0;
-import "../node_modules/@openzeppelin/contracts/math/SafeMath.sol";
+pragma solidity 0.8.3;
 import "../node_modules/@openzeppelin/contracts/access/Ownable.sol";
 import "../node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "../node_modules/@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "../node_modules/@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
 contract NetworkStateGenesis is ERC721 {
-    using SafeMath for uint256;
-
     string public GENESIS = "Will be populated";
 
   	uint256 public multiplier = 1001; 
@@ -30,12 +27,15 @@ contract NetworkStateGenesis is ERC721 {
     address payable public multisig; // Ensure that there is enough m-of-n signatories and you are one of them to be extra sure (don't trust, verify)
 
     // "Network State Genesis", "NSG", 0x85A363699C6864248a6FfCA66e4a1A5cCf9f5567
-    constructor(string memory name, string memory symbol, address payable _multisig, address _WBTCaddress, uint _cutoffTimestamp) ERC721(name, symbol) public {
+    constructor(string memory name, string memory symbol, address payable _multisig, address _WBTCaddress, uint _cutoffTimestamp) ERC721(name, symbol) {
         multisig = _multisig;
         cutoffTimestamp = _cutoffTimestamp;
         WBTCaddress = _WBTCaddress;
         WBTC = IERC20(WBTCaddress);
-        _setBaseURI("https://genesis.re/passports/");
+    }
+
+    function _baseURI() internal pure override returns (string memory) {
+        return "https://genesis.re/passports/";
     }
 
     //////////////////////////////// 
@@ -49,15 +49,15 @@ contract NetworkStateGenesis is ERC721 {
     // NOTE: cross-check with proof of humanity to prevent sybil attack
     function freeClaim() public {
         require(registrationTime[msg.sender] == 0, "Address already registered");
-        registrationTime[msg.sender] = now;
+        registrationTime[msg.sender] = block.timestamp;
         emit Claim(msg.sender);
     }
 
     function purchase() payable public {
         require(msg.value >= currentPrice, "Not enough ETH. Check the current price.");
-        uint256 refund = msg.value.sub(currentPrice);
+        uint256 refund = msg.value - currentPrice;
         if (refund > 0) {
-            msg.sender.transfer(refund);
+            payable(msg.sender).transfer(refund);
         }       
         multisig.transfer(currentPrice);
 
@@ -65,14 +65,14 @@ contract NetworkStateGenesis is ERC721 {
         emit Purchase(msg.sender, serialNumber, currentPrice, false);
         serialNumber++;
 
-        if (now > cutoffTimestamp) {
-            currentPrice = currentPrice.mul(multiplier).div(divisor); // mul(1001).div(1000) ---> increase by 0.1%
+        if (block.timestamp > cutoffTimestamp) {
+            currentPrice = currentPrice * multiplier / divisor; // * 1001 / 1000 === increase by 0.1% (no longer SafeMath, compiler by default)
         }
     }
 
     // This is inspired by Hackers Congress Paralelní Polis: final ticket available for 1 BTC
     // Network State Genesis offers *UNLIMITED* number of NFTs for 1 BTC
-    // How is that even possible? 🤔
+    // How is that even possible?
     // As we establish multiplanetary civilisation, some of the accrued money will be put back into the circulation (recycling)
     function purchaseWithWBTC() public {
         WBTC.transferFrom(msg.sender, multisig, 10 ** 18);

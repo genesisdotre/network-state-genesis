@@ -6,5 +6,7 @@ module.exports = async function (deployer) {
     const WBTCaddress = "0xa8010A0351520229E0783e68484F6fBa95867F60";
     const cutoffTimestamp = 1625443200;
 
-    await deployer.deploy(NetworkStateGenesis, "Network State Genesis", "🔮", multisig, WBTCaddress, cutoffTimestamp);
+    await deployer.deploy(NetworkStateGenesis, "Network State Genesis", "NSG", multisig, WBTCaddress, cutoffTimestamp);
 };
+
+// "Network State Genesis", "NSG", "0x21b3aE2c33605D20E005A56346Ff0C82Bb84fc74", "0xa8010A0351520229E0783e68484F6fBa95867F60", 1625443200
