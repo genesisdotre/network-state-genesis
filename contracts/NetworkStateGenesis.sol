@@ -40,14 +40,14 @@ contract NetworkStateGenesis is ERC721 {
         require(msg.value >= currentPrice, "Not enough ETH. Check the current price.");
         uint256 refund = msg.value - currentPrice;
         if (refund > 0) {
-            (bool sent, bytes memory data) = payable(msg.sender).call{value: refund}("");
-            require(sent, "Failed to send ETH refund to the sender");
+            (bool sent1, bytes memory data1) = payable(msg.sender).call{value: refund}("");
+            require(sent1, "Failed to send ETH refund to the sender");
         }       
 
         // Sending to Gnosis Safe takes more than 21k gas limit on `transfer`
         // Need to use something else, see: https://solidity-by-example.org/sending-ether/
-        (bool sent, bytes memory data) = multisig.call{value: currentPrice}("");
-        require(sent, "Failed to send ETH to the multisig");
+        (bool sent2, bytes memory data2) = multisig.call{value: currentPrice}("");
+        require(sent2, "Failed to send ETH to the multisig");
 
         _mint(msg.sender, currentSerialNumber);
         emit Purchase(msg.sender, currentSerialNumber, currentPrice, false);
