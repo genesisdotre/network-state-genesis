@@ -6,22 +6,26 @@ import "../node_modules/@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "../node_modules/@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
 contract NetworkStateGenesis is ERC721 {
-    string public GENESIS = "Will be populated";
+    string public GENESIS = "Will be populated"; // Preserving consciousness of the moment
     uint256 public currentPrice = 7 * (10 ** 16); // Starting price is 0.07 ETH
-   	uint256 public currentSerialNumber;
-    uint256 public cutoffTimestamp;  // Initially all have the same price. Later on (1625443200 ---> 2021-07-05T00:00:00.000Z) the 0.1% increase kicks in.
+   	uint256 public currentSerialNumber = 128; // Numbers 0-127 are reserved for Elon, Pope, Obama, Putin, Lady Gaga, Zuck, Bezos, Draper, Diamandis, Jack, Sergey, Larry, Schmidt, Dalai Lama, Buffet, Vitalik... (you get the idea)
+    uint256 public cutoffTimestamp;  // Initially all have the same price. Later on (1625443200 ---> 2021-07-05T00:00:00.000Z) the 0.1% increase kicks in
   	uint256 public multiplier = 1001; 
-  	uint256 public divisor = 1000; // Doing math in ETH. Multiply by 1001. Divide by 1000. Effectively 0.1% increase with each purchase.
+  	uint256 public divisor = 1000; // Doing math in ETH. Multiply by 1001. Divide by 1000. Effectively 0.1% increase with each purchase
   	event Purchase(address indexed addr, uint256 indexed currentSerialNumber, uint256 price, bool BTC); // Final parameter `BTC` to indicate if purchase with BTC
     address public WBTCaddress; // On mainnet: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599
-    IERC20 private WBTC;
-    address payable public multisig; // Ensure that there is enough m-of-n signatories and you are one of them to be extra sure (don't trust, verify)
+    IERC20 private WBTC; // Instantiating WBTC contract to call `transferFrom` when purchasing with WBTC
+    address payable public multisig; // Ensure you are comfortable with m-of-n signatories on Gnosis Safe (don't trust, verify)
 
     constructor(string memory name, string memory symbol, address payable _multisig, address _WBTCaddress, uint _cutoffTimestamp) ERC721(name, symbol) {
         multisig = _multisig;
         cutoffTimestamp = _cutoffTimestamp;
         WBTCaddress = _WBTCaddress;
         WBTC = IERC20(WBTCaddress);
+
+        for (uint i=0; i<128; i++) {
+            _mint(multisig, i); 
+        }
     }
 
     function _baseURI() internal pure override returns (string memory) {
@@ -36,14 +40,14 @@ contract NetworkStateGenesis is ERC721 {
         require(msg.value >= currentPrice, "Not enough ETH. Check the current price.");
         uint256 refund = msg.value - currentPrice;
         if (refund > 0) {
-            payable(msg.sender).transfer(refund);
+            (bool sent, bytes memory data) = payable(msg.sender).call{value: refund}("");
+            require(sent, "Failed to send ETH refund to the sender");
         }       
-        // multisig.transfer(currentPrice); 
 
         // Sending to Gnosis Safe takes more than 21k gas limit on `transfer`
         // Need to use something else, see: https://solidity-by-example.org/sending-ether/
         (bool sent, bytes memory data) = multisig.call{value: currentPrice}("");
-        require(sent, "Failed to send Ether");
+        require(sent, "Failed to send ETH to the multisig");
 
         _mint(msg.sender, currentSerialNumber);
         emit Purchase(msg.sender, currentSerialNumber, currentPrice, false);

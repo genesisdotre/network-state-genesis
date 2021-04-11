@@ -28,8 +28,8 @@ contract('Network State Genesis', async function(accounts) {
         let balanceAfterBeneficiary = await web3.eth.getBalance(beneficiary);
         assert.equal(balanceAfterBeneficiary.toString(), toWei("100.07"), "Beneficiary should have 100.07 ETH after the NFT purchase");
 
-        let owner = await nsg.ownerOf(0);
-        assert.equal(owner, guy1, "It should be guy1 who owns the NFT with the ID 0");
+        let owner = await nsg.ownerOf(128);
+        assert.equal(owner, guy1, "It should be guy1 who owns the NFT with the ID 128");
 
         // await expectThrow( nsg.sendTransaction({ value: toWei("0.1"), from: guy2 }) ); // too little, price increased by 0.1%
         await nsg.sendTransaction({ value: toWei("0.2"), from: guy2 });
@@ -37,8 +37,8 @@ contract('Network State Genesis', async function(accounts) {
 
         assert.closeTo(parseFloat(balanceAfterGuy2.toString()), parseFloat(toWei("99.93")), GAS_MARGIN, "Beneficiary should have only 100 from Truffle");
 
-        owner = await nsg.ownerOf(1);
-        assert.equal(owner, guy2, "It should be guy2 who owns the NFT with the ID 1");
+        owner = await nsg.ownerOf(129);
+        assert.equal(owner, guy2, "It should be guy2 who owns the NFT with the ID 129");
 
         // Single person can buy more than 1
         await nsg.sendTransaction({ value: toWei("0.07"), from: guy1 });
@@ -84,7 +84,7 @@ contract('Network State Genesis', async function(accounts) {
         let balanceBeneficiaryWBTC = await wbtc.balanceOf(beneficiary);
         assert.equal(parseFloat(balanceBeneficiaryWBTC.toString()), parseFloat(toWei("1")), "Beneficiary should have exactly 1 BTC");
 
-        assert.equal(await nsg.ownerOf(0), guy1, "It should be guy1 who owns the NFT with the ID 0 (purchased with WBTC)");
+        assert.equal(await nsg.ownerOf(128), guy1, "It should be guy1 who owns the NFT with the ID 128 (purchased with WBTC)");
     })
 
     it('Can do free claim', async() => {
