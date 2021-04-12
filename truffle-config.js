@@ -6,12 +6,21 @@ module.exports = {
     enableTimeouts: false
   },
   networks: {
+    mainnet: {
+      provider: () => new HDWalletProvider([privateKey], `https://mainnet.infura.io/v3/${projectId}`),
+      network_id: 1,
+      gas: 10000000,
+      timeoutBlocks: 2000,
+      skipDryRun: true, 
+      gasPrice: 80000000000
+    },
     rinkeby: {
       provider: () => new HDWalletProvider([privateKey], `https://rinkeby.infura.io/v3/${projectId}`),
       network_id: 4,       // Ropsten's id
       gas: 10000000,        // Ropsten has a lower block limit than mainnet
-      timeoutBlocks: 200,  // # of blocks before a deployment times out  (minimum/default: 50)
-      skipDryRun: true     // Skip dry run before migrations? (default: false for public nets )
+      timeoutBlocks: 2000,  // # of blocks before a deployment times out  (minimum/default: 50)
+      skipDryRun: true,     // Skip dry run before migrations? (default: false for public nets )
+      gasPrice: 80000000000 // 80 gwei (to get idea of the mainnet deployment cost)
     },
     ropsten: {
       provider: () => new HDWalletProvider([privateKey], `https://ropsten.infura.io/v3/${projectId}`),
@@ -47,7 +56,7 @@ module.exports = {
     'truffle-plugin-verify' 
   ],
 
-  // truffle run verify NetworkStateGenesis@0xafffa1ef6aefde95ac257274079a012d37584230 --network rinkeby
+  // truffle deploy --network rinkeby
   // truffle run verify NetworkStateGenesis --network rinkeby
 
   api_keys: {

@@ -29,7 +29,7 @@ contract NetworkStateGenesis is ERC721 {
     }
 
     function _baseURI() internal pure override returns (string memory) {
-        return "https://genesis.re/passports/";
+        return "https://passports.genesis.re/";
     }
  
     receive() external payable { // Fallback function
