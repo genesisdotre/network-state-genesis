@@ -5,8 +5,8 @@ import "../node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "../node_modules/@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "../node_modules/@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
-contract NetworkStateGenesis is ERC721 {
-    string public GENESIS = "Will be populated"; // Preserving consciousness of the moment
+contract NetworkStateGenesis is ERC721, Ownable {
+    string public GENESIS; // Preserving consciousness of the moment
     uint256 public currentPrice = 7 * (10 ** 16); // Starting price is 0.07 ETH
    	uint256 public currentSerialNumber = 128; // Numbers 0-127 are reserved for Elon, Pope, Obama, Putin, Lady Gaga, Zuck, Bezos, Draper, Diamandis, Jack, Sergey, Larry, Schmidt, Dalai Lama, Buffet, Vitalik... (you get the idea)
     uint256 public cutoffTimestamp;  // Initially all have the same price. Later on (1625443200 ---> 2021-07-05T00:00:00.000Z) the 0.1% increase kicks in
@@ -26,6 +26,12 @@ contract NetworkStateGenesis is ERC721 {
         for (uint i=0; i<128; i++) {
             _mint(multisig, i); 
         }
+    }
+
+    // 1. Deploy 2. Include the smart contract address in the PDF. 3. Save IPFS has in this method.
+    function setGenesis(string memory IPFShash) public onlyOwner {
+        require(bytes(GENESIS).length == 0, "GENESIS can be set only once"); // https://ethereum.stackexchange.com/a/46254/2524
+        GENESIS = IPFShash;
     }
 
     function _baseURI() internal pure override returns (string memory) {
