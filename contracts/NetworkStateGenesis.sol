@@ -7,6 +7,7 @@ import "../node_modules/@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
 contract NetworkStateGenesis is ERC721, Ownable {
     string public GENESIS; // Preserving consciousness of the moment
+    string public _tokenURI;
     uint256 public currentPrice = 7 * (10 ** 16); // Starting price is 0.07 ETH
    	uint256 public currentSerialNumber = 128; // Numbers 0-127 are reserved for Elon, Pope, Obama, Putin, Lady Gaga, Zuck, Bezos, Draper, Diamandis, Jack, Sergey, Larry, Schmidt, Dalai Lama, Buffet, Vitalik... (you get the idea)
     uint256 public cutoffTimestamp;  // Initially all have the same price. Later on (1625443200 ---> 2021-07-05T00:00:00.000Z) the 0.1% increase kicks in
@@ -18,6 +19,9 @@ contract NetworkStateGenesis is ERC721, Ownable {
     address payable public multisig; // Ensure you are comfortable with m-of-n signatories on Gnosis Safe (don't trust, verify)
 
     constructor(string memory name, string memory symbol, address payable _multisig, address _WBTCaddress, uint _cutoffTimestamp) ERC721(name, symbol) {
+        require(_multisig != address(0), "multisig has be set up");
+        require(_WBTCaddress != address(0), "WBTC has be set up");
+
         multisig = _multisig;
         cutoffTimestamp = _cutoffTimestamp;
         WBTCaddress = _WBTCaddress;
@@ -29,13 +33,19 @@ contract NetworkStateGenesis is ERC721, Ownable {
     }
 
     // 1. Deploy 2. Include the smart contract address in the PDF. 3. Save IPFS has in this method.
-    function setGenesis(string memory IPFShash) public onlyOwner {
+    function setGenesis(string memory IPFSURI) public onlyOwner {
         require(bytes(GENESIS).length == 0, "GENESIS can be set only once"); // https://ethereum.stackexchange.com/a/46254/2524
-        GENESIS = IPFShash;
+        GENESIS = IPFSURI;
     }
 
-    function _baseURI() internal pure override returns (string memory) {
-        return "https://passports.genesis.re/";
+    function setTokenURI(string memory URI) public onlyOwner {
+        require(bytes(_tokenURI).length == 0, "_tokenURI can be set only once");
+        _tokenURI = URI;
+    }
+
+    function tokenURI(uint256 tokenId) public view virtual override returns (string memory) {
+        require(_exists(tokenId), "ERC721Metadata: URI query for nonexistent token");
+        return _tokenURI;
     }
  
     receive() external payable { // Fallback function
@@ -90,7 +100,7 @@ contract NetworkStateGenesis is ERC721, Ownable {
 
     // On-chain interface for communication
     // Naturally, there will be off-chain solutions as well
-    event MessagePosted(string IPFShash);
+    event MessagePosted(string IPFShash, address author);
     mapping(address => string[]) public messages;
 
     function publishMessage(string memory IPFShash) public {
@@ -101,7 +111,7 @@ contract NetworkStateGenesis is ERC721, Ownable {
             messages[msg.sender].push(IPFShash);
         }
 
-        emit MessagePosted(IPFShash);
+        emit MessagePosted(IPFShash, msg.sender);
     }
 
     // Need to have decidated function, see: https://ethereum.stackexchange.com/a/20838/2524
