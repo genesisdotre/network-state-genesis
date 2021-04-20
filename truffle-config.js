@@ -10,33 +10,18 @@ module.exports = {
       provider: () => new HDWalletProvider([privateKey], `https://mainnet.infura.io/v3/${projectId}`),
       network_id: 1,
       gas: 10000000,
-      timeoutBlocks: 2000,
+      timeoutBlocks: 20000,
       skipDryRun: true, 
-      gasPrice: 80000000000
+      gasPrice: 220000000000
     },
     rinkeby: {
       provider: () => new HDWalletProvider([privateKey], `https://rinkeby.infura.io/v3/${projectId}`),
       network_id: 4,       // Ropsten's id
       gas: 10000000,        // Ropsten has a lower block limit than mainnet
-      timeoutBlocks: 2000,  // # of blocks before a deployment times out  (minimum/default: 50)
+      timeoutBlocks: 20000,  // # of blocks before a deployment times out  (minimum/default: 50)
       skipDryRun: true,     // Skip dry run before migrations? (default: false for public nets )
-      gasPrice: 80000000000 // 80 gwei (to get idea of the mainnet deployment cost)
+      gasPrice: 170000000000 // 80 gwei (to get idea of the mainnet deployment cost)
     },
-    ropsten: {
-      provider: () => new HDWalletProvider([privateKey], `https://ropsten.infura.io/v3/${projectId}`),
-      network_id: 3,       // Ropsten's id
-      gas: 8000000,        // Ropsten has a lower block limit than mainnet
-      timeoutBlocks: 200,  // # of blocks before a deployment times out  (minimum/default: 50)
-      skipDryRun: true     // Skip dry run before migrations? (default: false for public nets )
-    },
-    kovan: {
-      provider: () => new HDWalletProvider([privateKey], `https://kovan.infura.io/v3/${projectId}`),
-      network_id: 42,       // Ropsten's id
-      gas: 12500000,        // Ropsten has a lower block limit than mainnet
-      timeoutBlocks: 200,  // # of blocks before a deployment times out  (minimum/default: 50)
-      skipDryRun: true     // Skip dry run before migrations? (default: false for public nets )
-    },
-
    },
 
   // Configure your compilers

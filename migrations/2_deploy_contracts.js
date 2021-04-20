@@ -16,8 +16,8 @@ const cutoffTimestamp = 1625443200; // Mon Jul 05 2021 00:00:00 GMT+0000
 
 module.exports = async function (deployer, network) {
     const addresses = ADDR[network];
-    
-    console.log("Deploying to network: " + network + " contract addresses are as follows: ", addresses) ;
+
+    console.log("Deploying to network: " + network + ". Contract addresses are as follows: ", addresses) ;
 
     await deployer.deploy(NetworkStateGenesis, "Network State Genesis", "NSG", addresses.multisig, addresses.WBTC, cutoffTimestamp);
 };
