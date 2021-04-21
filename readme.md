@@ -1,4 +1,6 @@
-# Network State Genesis
+# Network State Genesis - Passport NFT
+
+![Network State Genesis Passport NFT](https://genesis.re/Network-State-Genesis-PASSPORT-LATEST.jpg)
 
 # [`0x3ef61d25b2bf303de52efdd5e50698bed8f9eb8d`](https://etherscan.io/address/0x3ef61d25b2bf303de52efdd5e50698bed8f9eb8d#code)
 
