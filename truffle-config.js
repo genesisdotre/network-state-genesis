@@ -9,10 +9,10 @@ module.exports = {
     mainnet: {
       provider: () => new HDWalletProvider([privateKey], `https://mainnet.infura.io/v3/${projectId}`),
       network_id: 1,
-      gas: 10000000,
+      gas: 9000000,
       timeoutBlocks: 20000,
       skipDryRun: true, 
-      gasPrice: 220000000000
+      gasPrice: 202000000000
     },
     rinkeby: {
       provider: () => new HDWalletProvider([privateKey], `https://rinkeby.infura.io/v3/${projectId}`),

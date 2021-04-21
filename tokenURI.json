@@ -3,9 +3,11 @@
     "name": "Network State Genesis",
     "description": "Network State Genesis. Planetary Council. Galactic Federation. New New World Order. This NFT represents the membership and agreement with the two fundamental values: LIFE and GRAVITY.",
     "image": "ipfs://QmeobMMV7ALj8AFD1U2Bm68kFAin8TCNtSTXXg7dsi4j1G/Network-State-Genesis.jpg",
-    "genesis": "ipfs://QmXC3uVmsnosN7wxvsRe19F6v9BkfYGL5gqafRNKdfbykc",
+    "genesis": "ipfs://QmYLhBxgdUCCygX5GBB764PwUUQknFBjERmPKu22DfqmFS",
+    "genesis_comment": "Google Doc, saved as PDF, uploaded to IPFS, saved to smart contract AND token URI AND Etherscan verified code: 'Preserving consciousness of the moment'",
     "external_url": "https://genesis.re",
     "image_brief": "https://genesis.re/brief",
-    "image_brief_comment": "At this URL should be instructions about the design brief. We intend that the next version will be a `next level` collaboration",
-    "image_latest": "https://genesis.re/Network-State-Genesis-PASSPORT-LATEST.jpg"
+    "image_brief_comment": "At this URL should be instructions about the design brief. We intend that the next version will be a `next level` collabo-hacking-ration",
+    "image_latest": "https://genesis.re/Network-State-Genesis-PASSPORT-LATEST.jpg",
+    "image_latest_comment": "Maybe ERC for evolving designs? Current design is the best what we could get given limited time and resources. Hoping the `next level` version will meet and exceed the expectations."
 }
