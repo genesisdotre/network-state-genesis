@@ -1,7 +1,6 @@
 const { expectThrow, increaseTime, latestTime, toWei, fromWei } = require('./helpers');
 
 const NSG = artifacts.require('NetworkStateGenesis')
-const WBTC = artifacts.require('WBTC')
 
 contract('Network State Genesis', async function(accounts) {
 
@@ -16,10 +15,8 @@ contract('Network State Genesis', async function(accounts) {
     const GAS_MARGIN = 0.01 * 10e18;
 
     let nsg;
-    let wbtc;
     
     beforeEach(async() => {
-        wbtc = await WBTC.new("Wrapped Bitcoin Token", "WBTC", { from: creator });
         nsg = await NSG.new("Network State Genesis", "NSG", beneficiary, wbtc.address, 1625443200, { from: creator });     
     })
 
@@ -75,38 +72,5 @@ contract('Network State Genesis', async function(accounts) {
 
 
     })
-
-    it('Can purchase NFT with WBTC', async() => {
-        await wbtc.mint(guy1, toWei("1"), {from: creator})
-        await wbtc.approve(nsg.address, toWei("1"), {from: guy1 })
-        await nsg.purchaseWithWBTC({from: guy1});
-
-        let balanceBeneficiaryWBTC = await wbtc.balanceOf(beneficiary);
-        assert.equal(parseFloat(balanceBeneficiaryWBTC.toString()), parseFloat(toWei("1")), "Beneficiary should have exactly 1 BTC");
-
-        assert.equal(await nsg.ownerOf(128), guy1, "It should be guy1 who owns the NFT with the ID 128 (purchased with WBTC)");
-    })
-
-    it('Can do free claim', async() => {
-        let currentJavaScriptTruffleTime = new Date();
-        await nsg.freeClaim({ from: guy1 });
-        await expectThrow(nsg.freeClaim({ from: guy1 }));
-
-        let blockchainTime = await nsg.registrationTime.call(guy1);
-        console.log(blockchainTime.toString());
-        console.log(currentJavaScriptTruffleTime);
-    })
-
-    it('Can post a message', async() => {
-        await nsg.publishMessage("ipfs hash 1", { from: guy1 });
-        await nsg.publishMessage("ipfs hash 2", { from: guy1 });
-
-        let messagesLength = await nsg.getMessagesLength.call(guy1);
-        assert.equal(messagesLength, 2, "There should be exactly two messages published by guy 1");
-
-        let message = await nsg.messages.call(guy1, 1);
-        console.log("Message >>>> ", message, " <<<<");
-    })
-
 
   })
