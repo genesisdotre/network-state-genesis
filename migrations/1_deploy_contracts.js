@@ -2,11 +2,11 @@ const NetworkStateGenesis = artifacts.require('NetworkStateGenesis')
 
 const ADDR = {
     "test": {
-        multisig: "0x21b3aE2c33605D20E005A56346Ff0C82Bb84fc74", // Gnosis Safe: just a random address (repeated from below)
+        multisig: "0x21b3aE2c33605D20E005A56346Ff0C82Bb84fc74", // Gnosis Safe: just a random address
     },
 
-    "rinkeby": {
-        multisig: "0x21b3aE2c33605D20E005A56346Ff0C82Bb84fc74", // Gnosis Safe: https://rinkeby.gnosis-safe.io/app/#/safes/0x21b3aE2c33605D20E005A56346Ff0C82Bb84fc74/balances
+    "sepolia": {
+        multisig: "0x33BaE12266B212192469d7af663d9D95F0470D2c", // Gnosis Safe: https://sepolia.etherscan.io/address/0x33BaE12266B212192469d7af663d9D95F0470D2c
     },
 
     "mainnet": {

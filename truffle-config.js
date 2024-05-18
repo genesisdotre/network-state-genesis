@@ -15,13 +15,14 @@ module.exports = {
     //   skipDryRun: true, 
     //   gasPrice: 202000000000
     // },
-    rinkeby: {
-      sepolia: () => new HDWalletProvider([privateKey], `https://sepolia.infura.io/v3/${projectId}`),
-      network_id: 11155111,       // Sepolia's id
-      gas: 10000000,         // Sepolia has a lower block limit than mainnet
-      timeoutBlocks: 20000,  // # of blocks before a deployment times out  (minimum/default: 50)
-      skipDryRun: true,     // Skip dry run before migrations? (default: false for public nets )
-      gasPrice: 170000000000 // 80 gwei (to get idea of the mainnet deployment cost)
+    sepolia: {
+      // provider: () => new HDWalletProvider([privateKey], `https://sepolia.infura.io/v3/${projectId}`),
+      provider: () => new HDWalletProvider([privateKey], `https://eth-sepolia.g.alchemy.com/v2/-T9BRNyVyymLfcu447YlPJQNOpPD0UAf`),
+      network_id: 11155111,
+      gas: 5500000,
+      confirmations: 2,
+      timeoutBlocks: 200,
+      skipDryRun: true
     },
    },
 
