@@ -9,7 +9,7 @@ interface INetworkStateGenesis { // No need for full ERC721, just minting
 contract MintNFT is Ownable {
 
     uint256 public currentPrice = 7 * (10 ** 15); // Starting price is 0.007 ETH (1/10th of the V1 price)
-   	uint256 public currentSerialNumber = 128;
+   	uint256 public currentSerialNumber = 0;
     uint256 public cutoffTimestamp; // Initially all have the same price. Later on the 0.5% increase kicks in
   	uint256 public multiplier = 1005; 
   	uint256 public divisor = 1000; // Doing math in ETH. Multiply by 1005. Divide by 1000. Effectively 0.5% increase with each purchase
@@ -29,14 +29,15 @@ contract MintNFT is Ownable {
     // 3. Set the address of Network State Genesis in MintNFT contract
     // This is to avoid Metamask warning: https://community.metamask.io/t/whitelist-of-token-contract-addresses-that-legitimately-accept-eth/28963
 
-    function setNetworkStateGenesis(address NetworkStateGenesisAddress) public onlyOwner {
+    function setup(address NetworkStateGenesisAddress) public onlyOwner {
         require(address(NetworkStateGenesis) == address(0), "NetworkStateGenesis has already been set");
         require(NetworkStateGenesisAddress != address(0), "Invalid NetworkStateGenesis address");
 
         NetworkStateGenesis = INetworkStateGenesis(NetworkStateGenesisAddress);
 
-        for (uint i=0; i<128; i++) { // Keeping low serial numbers to distribute later on
-            NetworkStateGenesis.mint(multisig, i); 
+        for (uint256 i=0; i<128; i++) { // Keeping low serial numbers to distribute later on
+            NetworkStateGenesis.mint(multisig, currentSerialNumber);
+            currentSerialNumber++;
         }
     }
  
@@ -73,6 +74,12 @@ contract MintNFT is Ownable {
         NetworkStateGenesis.mint(to, currentSerialNumber);
         emit MintByTheOwner(to, currentSerialNumber);
         currentSerialNumber++;
+    }
+
+    function batchMint(address[] calldata recipients) public onlyOwner {
+        for (uint256 i = 0; i < recipients.length; i++) {
+            mintByTheOwner(recipients[i]);
+        }
     }
 
 }

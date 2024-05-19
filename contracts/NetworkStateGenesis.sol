@@ -7,11 +7,6 @@ import "../node_modules/@openzeppelin/contracts/token/ERC721/ERC721.sol";
 contract NetworkStateGenesis is ERC721, Ownable {
     string public GENESIS; // Preserving consciousness of the moment
     string public _tokenURI;
-    uint256 public currentPrice = 7 * (10 ** 15); // Starting price is 0.007 ETH (1/10th of ETH mainnet price)
-   	uint256 public currentSerialNumber = 128;
-    uint256 public cutoffTimestamp;  // Initially all have the same price. Later on (1625443200 ---> 2021-07-05T00:00:00.000Z) the 0.1% increase kicks in
-  	uint256 public multiplier = 1005; 
-  	uint256 public divisor = 1000; // Doing math in ETH. Multiply by 1005. Divide by 1000. Effectively 0.5% increase with each purchase (higher than 0.1% that was present in V1)
   	event Purchase(address addr, uint256 currentSerialNumber, uint256 price);
 
     address payable public multisig; // Ensure you are comfortable with m-of-n signatories on Gnosis Safe (don't trust, verify)
@@ -40,5 +35,5 @@ contract NetworkStateGenesis is ERC721, Ownable {
     function mint(address addr, uint serialNumber) payable public {
         require(msg.sender == minter, "Only minter can mint");
         _mint(addr, serialNumber);
-    }
+    }  
 }
