@@ -1,4 +1,5 @@
 const NetworkStateGenesis = artifacts.require('NetworkStateGenesis')
+const Minter = artifacts.require('MintNFT')
 
 const ADDR = {
     "test": {
@@ -14,12 +15,17 @@ const ADDR = {
     }
 }
 
-const cutoffTimestamp = 1625443200; // Mon Jul 05 2021 00:00:00 GMT+0000
+const cutoffTimestamp = 1716246000;
 
 module.exports = async function (deployer, network) {
     const addresses = ADDR[network];
 
     console.log("Deploying to network: " + network + ". Contract addresses are as follows: ", addresses) ;
 
-    await deployer.deploy(NetworkStateGenesis, "Network State Genesis", "NSG", addresses.multisig, cutoffTimestamp);
+    await deployer.deploy(Minter, ADDR[network].multisig, cutoffTimestamp);
+
+    const minterInstance = await Minter.deployed();
+    const minterAddress = minterInstance.address;
+
+    await deployer.deploy(NetworkStateGenesis, "Network State Genesis", "NSG", minterAddress);
 };
