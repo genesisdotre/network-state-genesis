@@ -839,12 +839,6 @@ const addressesFULL = [
     "0x79427367e9be16353336d230de3031d489b1b3c3"
 ]
 
-const addressesMINI = [ // for testing
-    "0xc27c6a2ffb76210abbb96e3bb28a2901b398c3e4",
-    "0x7b276dd77d2eb48747f1b159d9ee98ab36390ebe",
-    "0x80e41ad1e659b8e2278591cdb2bbf7269f050269"
-]
-
 const BATCH_SIZE = 100;
 
 module.exports = async function (deployer, network, accounts) {

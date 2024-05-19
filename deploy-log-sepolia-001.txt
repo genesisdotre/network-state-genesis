@@ -1,0 +1,102 @@
+% truffle deploy --network sepolia
+
+Compiling your contracts...
+===========================
+> Everything is up to date, there is nothing to compile.
+
+
+Starting migrations...
+======================
+> Network name:    'sepolia'
+> Network id:      11155111
+> Block gas limit: 30000000 (0x1c9c380)
+
+
+1_deploy_contracts.js
+=====================
+Deploying to network: sepolia. Mulitisig address: 0x33BaE12266B212192469d7af663d9D95F0470D2c
+
+   Deploying 'MintNFT'
+   -------------------
+   > transaction hash:    0x42cb5e45812f85c8f52605666ff85e83b434378d49b985b4a5104074571c3286
+   > Blocks: 0            Seconds: 4
+   > contract address:    0x442dbf4fe0968c7f2396dd107c940e2834a3BeA4
+   > block number:        5937529
+   > block timestamp:     1716158112
+   > account:             0x85A363699C6864248a6FfCA66e4a1A5cCf9f5567
+   > balance:             474.110651874724468893
+   > gas used:            825273 (0xc97b9)
+   > gas price:           2.040334626 gwei
+   > value sent:          0 ETH
+   > total cost:          0.001683833077802898 ETH
+
+   Pausing for 2 confirmations...
+
+   -------------------------------
+   > confirmation number: 1 (block: 5937530)
+   > confirmation number: 2 (block: 5937531)
+
+   Replacing 'NetworkStateGenesis'
+   -------------------------------
+   > transaction hash:    0xcc8f4f4b9f056a18d7bc040160fb866350d64806a58a6abfb61ca57fa477d872
+   > Blocks: 0            Seconds: 8
+   > contract address:    0x34d32AC4eD0cEF66Bbc638781B97Fa6b494B98E0
+   > block number:        5937532
+   > block timestamp:     1716158148
+   > account:             0x85A363699C6864248a6FfCA66e4a1A5cCf9f5567
+   > balance:             474.107622346466322857
+   > gas used:            1537346 (0x177542)
+   > gas price:           1.970622266 gwei
+   > value sent:          0 ETH
+   > total cost:          0.003029528258146036 ETH
+
+   Pausing for 2 confirmations...
+
+   -------------------------------
+   > confirmation number: 1 (block: 5937533)
+   > confirmation number: 2 (block: 5937534)
+Minted batch starting at token ID 0
+Minted batch starting at token ID 100
+Minted batch starting at token ID 200
+Minted batch starting at token ID 300
+Minted batch starting at token ID 400
+Error: Unhandled error. ({
+  code: -32603,
+  message: 'Too Many Requests',
+  data: { originalError: {} },
+  stack: 'Error: Too Many Requests\n' +
+    '    at /Users/m/Code/network-state-genesis/node_modules/@trufflesuite/web3-provider-engine/subproviders/rpc.js:51:23\n' +
+    '    at Request._callback (/Users/m/Code/network-state-genesis/node_modules/@trufflesuite/web3-provider-engine/subproviders/rpc.js:53:11)\n' +
+    '    at Request.self.callback (/Users/m/Code/network-state-genesis/node_modules/request/request.js:185:22)\n' +
+    '    at Request.emit (node:events:527:28)\n' +
+    '    at Request.<anonymous> (/Users/m/Code/network-state-genesis/node_modules/request/request.js:1154:10)\n' +
+    '    at Request.emit (node:events:527:28)\n' +
+    '    at IncomingMessage.<anonymous> (/Users/m/Code/network-state-genesis/node_modules/request/request.js:1076:12)\n' +
+    '    at Object.onceWrapper (node:events:641:28)\n' +
+    '    at IncomingMessage.emit (node:events:539:35)\n' +
+    '    at endReadableNT (node:internal/streams/readable:1345:12)\n' +
+    '    at processTicksAndRejections (node:internal/process/task_queues:83:21)'
+})
+    at new NodeError (node:internal/errors:372:5)
+    at Web3ProviderEngine.emit (node:events:516:17)
+    at /Users/m/Code/network-state-genesis/node_modules/@trufflesuite/web3-provider-engine/index.js:57:14
+    at afterRequest (/Users/m/Code/network-state-genesis/node_modules/@trufflesuite/web3-provider-engine/index.js:151:21)
+    at /Users/m/Code/network-state-genesis/node_modules/@trufflesuite/web3-provider-engine/index.js:176:21
+    at /Users/m/Code/network-state-genesis/node_modules/@trufflesuite/web3-provider-engine/index.js:238:9
+    at /Users/m/Code/network-state-genesis/node_modules/async/internal/once.js:12:16
+    at replenish (/Users/m/Code/network-state-genesis/node_modules/async/internal/eachOfLimit.js:61:25)
+    at /Users/m/Code/network-state-genesis/node_modules/async/internal/eachOfLimit.js:71:9
+    at eachLimit (/Users/m/Code/network-state-genesis/node_modules/async/eachLimit.js:43:36)
+    at /Users/m/Code/network-state-genesis/node_modules/async/internal/doLimit.js:9:16
+    at end (/Users/m/Code/network-state-genesis/node_modules/@trufflesuite/web3-provider-engine/index.js:217:5)
+    at /Users/m/Code/network-state-genesis/node_modules/@trufflesuite/web3-provider-engine/subproviders/rpc.js:52:18
+    at Request._callback (/Users/m/Code/network-state-genesis/node_modules/@trufflesuite/web3-provider-engine/subproviders/rpc.js:53:11)
+    at Request.self.callback (/Users/m/Code/network-state-genesis/node_modules/request/request.js:185:22)
+    at Request.emit (node:events:527:28)
+    at Request.<anonymous> (/Users/m/Code/network-state-genesis/node_modules/request/request.js:1154:10)
+    at Request.emit (node:events:527:28)
+    at IncomingMessage.<anonymous> (/Users/m/Code/network-state-genesis/node_modules/request/request.js:1076:12)
+    at Object.onceWrapper (node:events:641:28)
+    at IncomingMessage.emit (node:events:539:35)
+    at endReadableNT (node:internal/streams/readable:1345:12)
+    at processTicksAndRejections (node:internal/process/task_queues:83:21)

@@ -16,8 +16,8 @@ module.exports = {
     //   gasPrice: 202000000000
     // },
     sepolia: {
-      // provider: () => new HDWalletProvider([privateKey], `https://sepolia.infura.io/v3/${projectId}`),
-      provider: () => new HDWalletProvider([privateKey], `https://eth-sepolia.g.alchemy.com/v2/-T9BRNyVyymLfcu447YlPJQNOpPD0UAf`),
+      provider: () => new HDWalletProvider([privateKey], `https://sepolia.infura.io/v3/${projectId}`),
+      // provider: () => new HDWalletProvider([privateKey], `https://eth-sepolia.g.alchemy.com/v2/-T9BRNyVyymLfcu447YlPJQNOpPD0UAf`),
       network_id: 11155111,
       gas: 5500000,
       confirmations: 2,
@@ -43,8 +43,8 @@ module.exports = {
     'truffle-plugin-verify' 
   ],
 
-  // truffle deploy --network rinkeby
-  // truffle run verify NetworkStateGenesis --network rinkeby
+  // truffle deploy --network sepolia
+  // truffle run verify NetworkStateGenesis --network sepolia
 
   api_keys: {
     etherscan: etherscanAPI
