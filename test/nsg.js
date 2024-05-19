@@ -19,14 +19,13 @@ contract('Network State Genesis', async function(accounts) {
     let minter;
     
     beforeEach(async() => {
-        minter = await Minter.new("0x21b3aE2c33605D20E005A56346Ff0C82Bb84fc74", 1716246000, { from: creator });
-        nsg = await NSG.new("Network State Genesis", "NSG", minter.address, { from: creator });     
+        minter = await Minter.new(beneficiary, 1716246000, { from: creator });
+        nsg = await NSG.new("Network State Genesis", "NSG", minter.address, { from: creator });
+        await minter.setNetworkStateGenesis(nsg.address, { from: creator });
     })
 
     it('Can purchase NFT with ETH', async() => {
-        console.log("1");
         await minter.sendTransaction({ value: toWei("0.007"), from: guy1 });
-        console.log("2");
         let balanceAfterBeneficiary = await web3.eth.getBalance(beneficiary);
         assert.equal(balanceAfterBeneficiary.toString(), toWei("100.007"), "Beneficiary should have 100.07 ETH after the NFT purchase");
 
@@ -49,31 +48,42 @@ contract('Network State Genesis', async function(accounts) {
 
     });
 
-    // it('Can refund ETH when sent too much', async () => {
-    //     let balanceBefore = await web3.eth.getBalance(guy1);
-    //     await nsg.sendTransaction({ value: toWei("10"), from: guy1 });
-    //     let balanceAfter = await web3.eth.getBalance(guy1);
-    //     assert.closeTo(parseFloat(balanceBefore.toString()) - toWei("0.007"), parseFloat(balanceAfter.toString()), GAS_MARGIN, "Guy 1 should receive refund (rather than spending 10 ETH");
+    it('Can refund ETH when sent too much', async () => {
+        let balanceBefore = await web3.eth.getBalance(guy1);
+        await minter.sendTransaction({ value: toWei("10"), from: guy1 });
+        let balanceAfter = await web3.eth.getBalance(guy1);
+        assert.closeTo(parseFloat(balanceBefore.toString()) - toWei("0.007"), parseFloat(balanceAfter.toString()), GAS_MARGIN, "Guy 1 should receive refund (rather than spending 10 ETH");
 
-    // });
+    });
 
-    // it('Should throw when sent too little', async() => {
-    //     await expectThrow( nsg.sendTransaction({ value: toWei("0.006"), from: guy1 }) );
-    
-    // });
+    it('Should throw when sent too little', async() => {
+        await expectThrow( minter.sendTransaction({ value: toWei("0.006"), from: guy1 }) );    
+    });
 
-    // it('Price increase after 4th of July', async() => {
-    //     await nsg.sendTransaction({ value: toWei("0007"), from: guy1 });
-    //     await increaseTime(1000 * days);
-    //     await nsg.sendTransaction({ value: toWei("0.007"), from: guy1 }); // that should still work, first after deadline, price hasn't increased
+    it('Price increase after the cutoff', async() => {
+        await minter.sendTransaction({ value: toWei("0007"), from: guy1 });
+        await increaseTime(1000 * days);
+        await minter.sendTransaction({ value: toWei("0.007"), from: guy1 }); // that should still work, first after deadline, price hasn't increased
 
-    //     await expectThrow(nsg.sendTransaction({ value: toWei("0.007"), from: guy1 })); 
+        await expectThrow(minter.sendTransaction({ value: toWei("0.007"), from: guy1 })); 
 
-    //     let balanceAfter = await nsg.balanceOf.call(guy1);
+        let balanceAfter = await nsg.balanceOf.call(guy1);
+        assert.equal(balanceAfter, 2, "Guy 1 should have exactly 2 tokens.");
+    })
 
-    //     console.log(balanceAfter.toString());
+    it('Should allow mint by the owner', async() => {
+        await minter.mintByTheOwner(guy1, { from: creator });
+        await minter.mintByTheOwner(guy1, { from: creator });
+        await minter.mintByTheOwner(guy1, { from: creator });
 
-    //     console.log("GUY1 should have only 2 ^^^^");
-    // })
+        let balanceAfter = await nsg.balanceOf.call(guy1);
+        assert.equal(balanceAfter, 3, "Guy 1 should have exactly 3 tokens.");
+
+        await expectThrow(minter.mintByTheOwner(guy2, {from: guy1 })); 
+    });
+
+    it('Should now allow setting NSG more than once', async() => {
+        await expectThrow(minter.setNetworkStateGenesis(nsg.address, { from: creator }));
+    });
 
   })

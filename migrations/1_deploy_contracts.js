@@ -18,14 +18,15 @@ const ADDR = {
 const cutoffTimestamp = 1716246000;
 
 module.exports = async function (deployer, network) {
-    const addresses = ADDR[network];
-
-    console.log("Deploying to network: " + network + ". Contract addresses are as follows: ", addresses) ;
+    console.log("Deploying to network: " + network + ". Mulitisig address: " + ADDR[network].multisig) ;
 
     await deployer.deploy(Minter, ADDR[network].multisig, cutoffTimestamp);
-
     const minterInstance = await Minter.deployed();
     const minterAddress = minterInstance.address;
 
     await deployer.deploy(NetworkStateGenesis, "Network State Genesis", "NSG", minterAddress);
+    const networkStateGenesisInstance = await NetworkStateGenesis.deployed();
+    const networkStateGenesisAddress = networkStateGenesisInstance.address;
+
+    await minterInstance.setNetworkStateGenesis(networkStateGenesisAddress);
 };

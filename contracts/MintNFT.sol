@@ -14,6 +14,7 @@ contract MintNFT is Ownable {
   	uint256 public multiplier = 1005; 
   	uint256 public divisor = 1000; // Doing math in ETH. Multiply by 1005. Divide by 1000. Effectively 0.5% increase with each purchase
   	event Purchase(address addr, uint256 currentSerialNumber, uint256 price);
+  	event MintByTheOwner(address addr, uint256 currentSerialNumber);
 
     address payable public multisig; // Ensure you are comfortable with m-of-n signatories on Gnosis Safe (don't trust, verify)
     INetworkStateGenesis public NetworkStateGenesis;
@@ -29,7 +30,9 @@ contract MintNFT is Ownable {
     // This is to avoid Metamask warning: https://community.metamask.io/t/whitelist-of-token-contract-addresses-that-legitimately-accept-eth/28963
 
     function setNetworkStateGenesis(address NetworkStateGenesisAddress) public onlyOwner {
-        require(NetworkStateGenesisAddress == address(0), "NetworkStateGenesis can be set only once");
+        require(address(NetworkStateGenesis) == address(0), "NetworkStateGenesis has already been set");
+        require(NetworkStateGenesisAddress != address(0), "Invalid NetworkStateGenesis address");
+
         NetworkStateGenesis = INetworkStateGenesis(NetworkStateGenesisAddress);
 
         for (uint i=0; i<128; i++) { // Keeping low serial numbers to distribute later on
@@ -59,8 +62,17 @@ contract MintNFT is Ownable {
         currentSerialNumber++;
 
         if (block.timestamp > cutoffTimestamp) {
-            currentPrice = currentPrice * multiplier / divisor; // * 1001 / 1000 === increase by 0.1% (no longer SafeMath, compiler by default)
+            currentPrice = currentPrice * multiplier / divisor; // * 1005 / 1000 === increase by 0.5%
         }
+    }
+
+    // Does not increase the price
+    // See discussion about this feature: https://github.com/genesisdotre/network-state-genesis/issues/2
+    // Can always renounce the ownership to prevent minting
+    function mintByTheOwner(address to) public onlyOwner {
+        NetworkStateGenesis.mint(to, currentSerialNumber);
+        emit MintByTheOwner(to, currentSerialNumber);
+        currentSerialNumber++;
     }
 
 }
