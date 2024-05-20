@@ -5,13 +5,14 @@
 # V2 (arbitrum)
 ### `0x7bA6310416B3791CCd967219525b2ceBfCe14CC8`
 
-Split into two contracts to avoid [Metamask warning](https://community.metamask.io/t/whitelist-of-token-contract-addresses-that-legitimately-accept-eth/28963);
+Split into two contracts to avoid [Metamask warning](https://community.metamask.io/t/whitelist-of-token-contract-addresses-that-legitimately-accept-eth/28963).
 * Minter (send ETH here): https://arbiscan.io/tx/0x797a0aa3e8baa148dc0b5eafd2af55bbed6cde341de44180c19e62d503c30842
 * Network State Genesis V2: https://arbiscan.io/tx/0xec919e5a4e4c091697e4882a42ccec55a25dfa42be3566940f6448075a2e9688
 * Set **GENESIS**: https://arbiscan.io/tx/0x6cedfa8709c4e8c4fedde40a32c918bf760b58d4f750df3a9de9a45b767c5c2d
 * Set TokenURI: https://arbiscan.io/tx/0x965d360d24761488b67cfb5901691c9945d23ed7a77ee7658e23a06fb6d65f3e
 
 **GENESIS**: `ipfs://QmRTpvfea5KTWzccDcg4QCLWujJCZuLXg5tqDPj2eKD4Gc`
+
 Token URI: `ipfs://QmT2krEdbjEXr4sH22J955Eo8qBc3kwjdfMTQ7Ee1JATW5`
 
 # V1 (mainnet)
