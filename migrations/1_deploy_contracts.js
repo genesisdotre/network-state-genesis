@@ -12,6 +12,10 @@ const ADDR = {
 
     "mainnet": {
         multisig: "0x476f2d18D28FA1a4FC62CE680fA7852524eB820F", // Real Gnosis Safe: https://gnosis-safe.io/app/#/safes/0x476f2d18D28FA1a4FC62CE680fA7852524eB820F
+    },
+
+    "arbitrum": {
+        multisig: "0x000007F073eda2e5Aaf9497993C1F7fed1242F90", // Cool address, see this issue: https://github.com/basexhq/basex.com/issues/1#issuecomment-2118829182
     }
 }
 

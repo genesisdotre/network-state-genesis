@@ -6,18 +6,17 @@ module.exports = {
     enableTimeouts: false
   },
   networks: {
-    // TODO: ARBITRUM HERE
-    // mainnet: {
-    //   provider: () => new HDWalletProvider([privateKey], `https://mainnet.infura.io/v3/${projectId}`),
-    //   network_id: 1,
-    //   gas: 9000000,
-    //   timeoutBlocks: 20000,
-    //   skipDryRun: true, 
-    //   gasPrice: 202000000000
-    // },
+    arbitrum: {
+      // provider: () => new HDWalletProvider([privateKey], `https://arbitrum-mainnet.infura.io/v3/${projectId}`),
+      provider: () => new HDWalletProvider([privateKey], `https://arb-mainnet.g.alchemy.com/v2/-qZsYxHU3k-SSsZgQGQK1sHysM8s_Lw8`),
+      network_id: 42161,
+      gas: 9000000,
+      timeoutBlocks: 2000,
+      skipDryRun: true, 
+    },
     sepolia: {
-      provider: () => new HDWalletProvider([privateKey], `https://sepolia.infura.io/v3/${projectId}`),
-      // provider: () => new HDWalletProvider([privateKey], `https://eth-sepolia.g.alchemy.com/v2/-T9BRNyVyymLfcu447YlPJQNOpPD0UAf`),
+      // provider: () => new HDWalletProvider([privateKey], `https://sepolia.infura.io/v3/${projectId}`),
+      provider: () => new HDWalletProvider([privateKey], `https://eth-sepolia.g.alchemy.com/v2/-T9BRNyVyymLfcu447YlPJQNOpPD0UAf`),
       network_id: 11155111,
       gas: 5500000,
       confirmations: 2,
