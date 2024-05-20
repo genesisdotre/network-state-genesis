@@ -92,3 +92,6 @@ Error: Unhandled error. ({
     at IncomingMessage.emit (node:events:539:35)
     at endReadableNT (node:internal/streams/readable:1345:12)
     at processTicksAndRejections (node:internal/process/task_queues:83:21)
+
+
+    // So minted the remaining ones manually in this transaction: https://arbiscan.io/tx/0x32248d1e3ea3a497e722b74b574e3ae07525e2cbe307ae82dd97a42b45218acb
